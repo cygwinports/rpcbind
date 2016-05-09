@@ -1,0 +1,12 @@
+NAME="rpcbind"
+VERSION=0.2.1
+RELEASE=1
+CATEGORY="Net"
+SUMMARY="Transport-independent ONC RPC portmapper"
+DESCRIPTION="The rpcbind utility is a server that converts RPC program numbers into universal addresses"
+HOMEPAGE="http://sourceforge.net/projects/rpcbind/"
+SRC_URI="mirror://sourceforge/rpcbind/rpcbind-${VERSION}.tar.bz2"
+
+OBSOLETES="sunrpc"
+
+CYGCONF_ARGS="--bindir=/usr/sbin"
