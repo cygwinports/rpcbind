@@ -1,5 +1,5 @@
---- origsrc/rpcbind-0.2.1/src/rpcb_svc_com.c	2013-08-19 19:49:34.000000000 +0500
-+++ src/rpcbind-0.2.1/src/rpcb_svc_com.c	2014-08-22 14:47:11.905669800 +0500
+--- origsrc/rpcbind-0.2.4/src/rpcb_svc_com.c	2017-06-27 02:19:33.344600800 -0500
++++ src/rpcbind-0.2.4/src/rpcb_svc_com.c	2017-06-27 02:21:38.540761800 -0500
 @@ -43,7 +43,9 @@
  #include <sys/stat.h>
  #include <sys/param.h>
@@ -10,29 +10,31 @@
  #include <sys/socket.h>
  #include <rpc/rpc.h>
  #include <rpc/rpcb_prot.h>
-@@ -65,10 +67,12 @@
- 
+@@ -67,8 +69,12 @@
  #define RPC_BUF_MAX	65536	/* can be raised if required */
  
--
+ 
 +#ifndef POLLRDNORM
  # define POLLRDNORM	0x040		/* Normal data may be read.  */
 +#endif
 +#ifndef POLLRDBAND
  # define POLLRDBAND	0x080		/* Priority data may be read.  */
--
 +#endif
  
  
- static char *nullstring = "";
---- origsrc/rpcbind-0.2.1/src/rpcbind.c	2013-08-19 19:49:34.000000000 +0500
-+++ src/rpcbind-0.2.1/src/rpcbind.c	2014-08-22 14:47:11.909669800 +0500
-@@ -87,11 +87,15 @@ rpcblist_ptr list_rbl;	/* A list of vers
+ 
+--- origsrc/rpcbind-0.2.4/src/rpcbind.c	2016-11-28 14:47:28.000000000 -0600
++++ src/rpcbind-0.2.4/src/rpcbind.c	2017-06-27 02:21:38.547761800 -0500
+@@ -94,7 +94,7 @@ rpcblist_ptr list_rbl;	/* A list of vers
  #ifdef RPCBIND_USER
  char *rpcbinduser = RPCBIND_USER;
  #else
 -char *rpcbinduser = NULL;
 +char *rpcbinduser = "";
+ #endif
+ 
+ #ifdef NSS_MODULES
+@@ -104,7 +104,11 @@ char *nss_modules = "files";
  #endif
  
  /* who to suid to if -s is given */
@@ -44,10 +46,10 @@
  
  #define RPCBINDDLOCK "/var/run/rpcbind.lock"
  
-@@ -155,10 +159,12 @@ main(int argc, char *argv[])
+@@ -171,10 +175,12 @@ main(int argc, char *argv[])
  		setrlimit(RLIMIT_NOFILE, &rl);
  	}
- 	openlog("rpcbind", LOG_CONS, LOG_DAEMON);
+ 
 +#ifndef __CYGWIN__
  	if (geteuid()) { /* This command allowed only to root */
  		fprintf(stderr, "Sorry. You are not superuser\n");
@@ -57,8 +59,8 @@
  
  	/*
  	 * Make sure we use the local service file 
-@@ -222,7 +228,7 @@ main(int argc, char *argv[])
-         		err(1, "fork failed");
+@@ -249,7 +255,7 @@ main(int argc, char *argv[])
+         	err(1, "fork failed");
  	}
  
 -	if (runasdaemon || rpcbinduser) {
@@ -66,17 +68,9 @@
  		struct passwd *p;
  		char *id = runasdaemon ? RUN_AS : rpcbinduser;
  
---- origsrc/rpcbind-0.2.1/src/security.c	2013-08-19 19:49:34.000000000 +0500
-+++ src/rpcbind-0.2.1/src/security.c	2014-08-22 14:47:11.912669800 +0500
-@@ -24,7 +24,6 @@
- #include <rpcsvc/rquota.h>
- #include <rpcsvc/nfs_prot.h>
- #include <rpcsvc/yp.h>
--#include <rpcsvc/ypclnt.h>
- #include <rpcsvc/yppasswd.h>
- 
- #include "rpcbind.h"
-@@ -53,7 +52,7 @@ int deny_severity = LIBWRAP_DENY_FACILIT
+--- origsrc/rpcbind-0.2.4/src/security.c	2016-11-28 14:47:28.000000000 -0600
++++ src/rpcbind-0.2.4/src/security.c	2017-06-27 02:21:38.554262800 -0500
+@@ -72,7 +71,7 @@ int deny_severity = LIBWRAP_DENY_FACILIT
  #ifndef PORTMAP_LOG_SEVERITY
  # define PORTMAP_LOG_SEVERITY LOG_INFO
  #endif
