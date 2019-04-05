@@ -1,5 +1,5 @@
 NAME="rpcbind"
-VERSION=0.2.4
+VERSION=1.2.5
 RELEASE=1
 CATEGORY="Net"
 SUMMARY="Transport-independent ONC RPC portmapper"
@@ -7,10 +7,10 @@ DESCRIPTION="The rpcbind utility is a server that converts RPC program numbers i
 HOMEPAGE="http://sourceforge.net/projects/rpcbind/"
 SRC_URI="mirror://sourceforge/rpcbind/rpcbind-${VERSION}.tar.bz2"
 PATCH_URI="
-	http://pkgs.fedoraproject.org/cgit/rpms/rpcbind.git/plain/rpcbind-0.2.5-rc3.patch
+	https://src.fedoraproject.org/cgit/rpms/rpcbind.git/plain/rpcbind-1.2.5-rpcinfo-bufoverflow.patch
 	0.2.4-cygwin.patch
 "
 
 OBSOLETES="sunrpc"
 
-CYGCONF_ARGS="--bindir=/usr/sbin --without-systemdsystemunitdir"
+CYGCONF_ARGS="--without-systemdsystemunitdir"
