@@ -11,6 +11,7 @@ PATCH_URI="
 	0.2.4-cygwin.patch
 "
 
-OBSOLETES="sunrpc"
+# version is less; would need epoch to correctly obsolete
+#OBSOLETES="sunrpc"
 
 CYGCONF_ARGS="--without-systemdsystemunitdir"
